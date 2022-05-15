@@ -1,0 +1,22 @@
+server:
+  port: 8030
+spring:
+  application:
+    name: yeb-server
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver # 8.0 以后是需要加时区的
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*mapper.xml
+  type-aliases-package: com.kuang.pojo
+# 用于sql语句的查询的打印
+logging:
+  level:
+    com.kuang.mapper: debug
+jwt:
+  tokenHeader: Authorization
+  sercret: sercret
+  expiration: 60*60
+  tokenHead: Bearer
