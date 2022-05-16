@@ -1,7 +1,7 @@
 package com.kuang.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.kuang.pojo.Test;
+import com.kuang.pojo.Tes;
 
 /**
  * <p>
@@ -9,8 +9,8 @@ import com.kuang.pojo.Test;
  * </p>
  *
  * @author kuang
- * @since 2022-05-15
+ * @since 2022-05-16
  */
-public interface ITestService extends IService<Test> {
+public interface ITesService extends IService<Tes> {
 
 }

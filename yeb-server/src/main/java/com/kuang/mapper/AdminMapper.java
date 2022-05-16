@@ -1,7 +1,7 @@
 package com.kuang.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.kuang.pojo.Test;
+import com.kuang.pojo.Admin;
 
 /**
  * <p>
@@ -9,8 +9,8 @@ import com.kuang.pojo.Test;
  * </p>
  *
  * @author kuang
- * @since 2022-05-15
+ * @since 2022-05-16
  */
-public interface TestMapper extends BaseMapper<Test> {
+public interface AdminMapper extends BaseMapper<Admin> {
 
 }

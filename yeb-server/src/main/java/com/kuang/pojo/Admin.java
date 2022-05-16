@@ -26,9 +26,9 @@ import java.util.Collection;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_user")
-@ApiModel(value="User对象", description="")
-public class User implements Serializable{
+@TableName("t_admin")
+@ApiModel(value="Admin对象", description="")
+public class Admin implements Serializable,UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,5 +49,29 @@ public class User implements Serializable{
     private Boolean enabled;
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
 }

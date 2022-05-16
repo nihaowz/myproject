@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author kuang
- * @since 2022-05-15
+ * @since 2022-05-16
  */
 @RestController
 @RequestMapping("/user")

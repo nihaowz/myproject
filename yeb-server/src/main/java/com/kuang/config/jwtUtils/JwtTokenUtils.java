@@ -3,9 +3,7 @@ package com.kuang.config.jwtUtils;
 
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -17,8 +15,8 @@ import java.util.Map;
 @Component
 public class JwtTokenUtils {
 
-    private  static final String CLAIM_KEY_USERNAME = "sub";   //用户名的key
-    private  static final String CLAIM_KEY_CREATED = "created";   //jwt的创建时间
+    private  static final String CLAIM_KEY_USERNAME = "sub";   //用户名
+    private  static final String CLAIM_KEY_CREATED = "created";   //创建时间
 
     @Value("${jwt.sercret}")
     private  String sercret;
@@ -57,11 +55,11 @@ public class JwtTokenUtils {
     }
 
     //生成token，从token中拿到用户名
-    public String getUsernameFromToken(String Token){
+    public String getUsernameFromToken(String token){
         String username;
 
         try {
-            Claims claims = getClaimsFromToken(Token);
+            Claims claims = getClaimsFromToken(token);
             username = claims.getSubject();
         } catch (Exception e) {
             username = null;
@@ -69,16 +67,53 @@ public class JwtTokenUtils {
 
        return username;
     }
-    public Claims getClaimsFromToken(String Token){
-        return Jwts.parser()
-                .setSigningKey(sercret)
-                .parseClaimsJws(Token)
-                .getBody();
+    private Claims getClaimsFromToken(String token){
+        Claims claims = null;
+
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(sercret)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return claims;
+    }
+    //token是否过期
+    //username和token中的用户名是否一致
+    public boolean validateToken(String token, UserDetails userDetails){
+        String username = getUsernameFromToken(token);
+        if(username.equals(userDetails.getUsername())&&!isExpiration(token)){
+            return  true;
+        }else{
+            return false;
+        }
     }
 
-    //判断token是否过期
-
     //token是否需要刷新
+     public  boolean canFlush(String token){
+        return !isExpiration(token);
+     }
+
+     public String refreshToken(String token){
+         Claims claims = getClaimsFromToken(token);
+         claims.put(CLAIM_KEY_CREATED,new Date());
+         return generateToken(claims);
+     }
+
+
+    // token是否失效
+    public boolean isExpiration(String token){
+        Date date = getExpirationDate(token);
+        return date.before(new Date());
+    }
+
+    public Date getExpirationDate(String token){
+        Claims claims = getClaimsFromToken(token);
+        Date expiration = claims.getExpiration();
+        return expiration;
+    }
 
 
 

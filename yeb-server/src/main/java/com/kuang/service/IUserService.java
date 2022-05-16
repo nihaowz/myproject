@@ -9,7 +9,7 @@ import com.kuang.pojo.User;
  * </p>
  *
  * @author kuang
- * @since 2022-05-15
+ * @since 2022-05-16
  */
 public interface IUserService extends IService<User> {
 
