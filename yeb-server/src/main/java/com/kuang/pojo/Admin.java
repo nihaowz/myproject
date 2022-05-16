@@ -28,15 +28,35 @@ import java.util.Collection;
 @Accessors(chain = true)
 @TableName("t_admin")
 @ApiModel(value="Admin对象", description="")
-public class Admin implements Serializable,UserDetails {
+public class Admin implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "主键")
+    @ApiModelProperty(value = "id")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty(value = "名字")
+    @ApiModelProperty(value = "姓名")
+    @TableField("name")
+    private String name;
+
+    @ApiModelProperty(value = "手机号码")
+    @TableField("phone")
+    private String phone;
+
+    @ApiModelProperty(value = "住宅电话")
+    @TableField("telephone")
+    private String telephone;
+
+    @ApiModelProperty(value = "联系地址")
+    @TableField("address")
+    private String address;
+
+    @ApiModelProperty(value = "是否启用")
+    @TableField("enabled")
+    private Boolean enabled;
+
+    @ApiModelProperty(value = "用户名")
     @TableField("username")
     private String username;
 
@@ -44,9 +64,13 @@ public class Admin implements Serializable,UserDetails {
     @TableField("password")
     private String password;
 
-    @ApiModelProperty(value = "是否被禁用")
-    @TableField("enabled")
-    private Boolean enabled;
+    @ApiModelProperty(value = "用户头像")
+    @TableField("userFace")
+    private String userFace;
+
+    @ApiModelProperty(value = "备注")
+    @TableField("remark")
+    private String remark;
 
 
     @Override
@@ -73,5 +97,4 @@ public class Admin implements Serializable,UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
-
 }

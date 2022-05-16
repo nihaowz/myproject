@@ -5,6 +5,9 @@ import com.kuang.pojo.Admin;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
 import org.springframework.http.HttpRequest;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -16,5 +19,7 @@ import org.springframework.http.HttpRequest;
  */
 public interface IAdminService extends IService<Admin> {
 
-    Response login(AdminLoginVO adminLogin, HttpRequest httpRequest);
+    Response login(AdminLoginVO adminLogin, HttpServletRequest httpRequest);
+
+    Admin getAdminByName(String username);
 }

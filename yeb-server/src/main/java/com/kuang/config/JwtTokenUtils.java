@@ -1,4 +1,4 @@
-package com.kuang.config.jwtUtils;
+package com.kuang.config;
 
 
 
