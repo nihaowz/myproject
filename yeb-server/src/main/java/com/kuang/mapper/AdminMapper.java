@@ -2,7 +2,12 @@ package com.kuang.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kuang.pojo.Admin;
+import com.kuang.pojo.Role;
+import org.apache.ibatis.annotations.Mapper;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,7 +17,8 @@ import org.springframework.stereotype.Repository;
  * @author kuang
  * @since 2022-05-16
  */
-@Repository
+@Mapper
 public interface AdminMapper extends BaseMapper<Admin> {
 
+    List<Role> getRoles(Integer id);
 }

@@ -4,7 +4,9 @@ package com.kuang.controller;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.kuang.config.kaptchaConfig.KaptchaConfig;
 import com.kuang.pojo.Admin;
+import com.kuang.pojo.Role;
 import com.kuang.service.IAdminService;
+import com.kuang.service.IRoleService;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
 import io.swagger.annotations.Api;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.security.Principal;
+import java.util.List;
 
 /**
  * <p>
@@ -36,6 +39,9 @@ public class AdminController {
 
     @Autowired
     IAdminService iAdminService;
+
+    @Autowired
+    IRoleService roleService;
 
     @Autowired
     DefaultKaptcha defaultKaptcha;
@@ -69,6 +75,7 @@ public class AdminController {
             return Response.fail("获取失败");
         }
         admin.setPassword(null);
+        admin.setRoles(roleService.getRoles(admin.getId()));
         return Response.success("获取成功",admin);
     }
 
@@ -103,6 +110,13 @@ public class AdminController {
         }
         IOUtils.closeQuietly(outputStream);
 
+    }
+
+
+    @ApiOperation(value = "根据用户id查询用户角色")
+    @GetMapping("/getRoles")
+    public List<Role> getRoles(Integer adminId){
+        return roleService.getRoles(adminId);
     }
 
 

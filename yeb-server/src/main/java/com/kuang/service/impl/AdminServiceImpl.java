@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kuang.config.jwtConfig.JwtTokenUtils;
 import com.kuang.mapper.AdminMapper;
 import com.kuang.pojo.Admin;
+import com.kuang.pojo.Role;
 import com.kuang.service.IAdminService;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -110,4 +112,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             return admin;
         }
     }
+
+
 }

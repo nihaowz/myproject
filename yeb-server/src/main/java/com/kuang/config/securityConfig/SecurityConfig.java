@@ -1,13 +1,13 @@
 package com.kuang.config.securityConfig;
 
-import com.kuang.config.jwtConfig.JwtAuthenticationTokenFilter;
-import com.kuang.config.jwtConfig.RestAuthorizationEnrtyPoint;
-import com.kuang.config.jwtConfig.RestfulAccessDeniedHandle;
+import com.kuang.config.jwtConfig.*;
 import com.kuang.pojo.Admin;
 import com.kuang.service.IAdminService;
+import com.kuang.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -25,10 +26,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     IAdminService adminService;
 
     @Autowired
+    IRoleService roleService;
+
+    @Autowired
     RestfulAccessDeniedHandle restfulAccessDeniedHandle;
 
     @Autowired
     RestAuthorizationEnrtyPoint restAuthorizationEnrtyPoint;
+
+    @Autowired
+    CustomFilter customFilter;
+    @Autowired
+    CustomUrlManager customUrlManager;
 
     //认证
     @Override
@@ -68,6 +77,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //其他都要拦截
                 .anyRequest()
                 .authenticated()
+                //动态拦截
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setAccessDecisionManager(customUrlManager);
+                        object.setSecurityMetadataSource(customFilter);
+                        return object;
+                    }
+                })
                 .and()
                 //缓存都用不到
                 .headers()
@@ -89,6 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             if (admin == null) {
                 return null;
             } else {
+                admin.setRoles(roleService.getRoles(admin.getId()));
                 return admin;
             }
         };

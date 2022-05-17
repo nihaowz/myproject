@@ -2,6 +2,9 @@ package com.kuang.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kuang.pojo.Menu;
+import io.swagger.models.auth.In;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,8 @@ import com.kuang.pojo.Menu;
  */
 public interface IMenuService extends IService<Menu> {
 
+    List<Menu> getMenuByAdminId();
+
+
+    List<Menu> getMenusFromRole();
 }

@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -72,10 +74,19 @@ public class Admin implements Serializable, UserDetails {
     @TableField("remark")
     private String remark;
 
+    @ApiModelProperty(value = "角色")
+    @TableField(exist = false)
+    private List<Role> roles;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles.stream().map(role ->new GrantedAuthority() {
+            @Override
+            public String getAuthority() {
+                return role.getName();
+            }
+        }).collect(Collectors.toList());
     }
 
     @Override

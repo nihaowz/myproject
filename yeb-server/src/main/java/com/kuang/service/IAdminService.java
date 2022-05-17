@@ -2,12 +2,14 @@ package com.kuang.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kuang.pojo.Admin;
+import com.kuang.pojo.Role;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
 import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -22,4 +24,5 @@ public interface IAdminService extends IService<Admin> {
     Response login(AdminLoginVO adminLogin, HttpServletRequest httpRequest);
 
     Admin getAdminByName(String username);
+
 }

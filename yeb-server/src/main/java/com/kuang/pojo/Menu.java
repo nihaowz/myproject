@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -68,6 +69,16 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "是否启用")
     @TableField("enabled")
     private Boolean enabled;
+
+    @ApiModelProperty(value = "子菜单")
+    @TableField(exist = false)
+    //相当于就是在数据库中不存在
+    private List<Menu> children;
+
+    @ApiModelProperty(value = "角色")
+    @TableField(exist = false)
+    //哪些角色才能拥有这个菜单
+    private List<Role> roles;
 
 
 }
