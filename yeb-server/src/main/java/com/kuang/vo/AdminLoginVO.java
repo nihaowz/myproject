@@ -20,4 +20,7 @@ public class AdminLoginVO {
 
     @ApiModelProperty(value = "登录密码",required = true)
     private String password;
+
+    @ApiModelProperty(value = "验证码",required = true)
+    private String code;
 }

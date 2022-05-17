@@ -1,4 +1,4 @@
-package com.kuang.config;
+package com.kuang.config.jwtConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kuang.utils.Response;

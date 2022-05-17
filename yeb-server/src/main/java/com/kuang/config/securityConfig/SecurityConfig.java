@@ -1,5 +1,8 @@
-package com.kuang.config;
+package com.kuang.config.securityConfig;
 
+import com.kuang.config.jwtConfig.JwtAuthenticationTokenFilter;
+import com.kuang.config.jwtConfig.RestAuthorizationEnrtyPoint;
+import com.kuang.config.jwtConfig.RestfulAccessDeniedHandle;
 import com.kuang.pojo.Admin;
 import com.kuang.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.security.PublicKey;
-import java.util.Locale;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/admin/login",
                 "/admin/logout",
+                "/admin/getCode",
                 "/css/**",
                 "/js/**",
                 "/index.html",

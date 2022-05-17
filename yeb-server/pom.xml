@@ -14,6 +14,15 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-    </properties>0
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <!-- 验证码实现的包-->
+            <groupId>com.github.axet</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>0.0.9</version>
+        </dependency>
+    </dependencies>
 
 </project>

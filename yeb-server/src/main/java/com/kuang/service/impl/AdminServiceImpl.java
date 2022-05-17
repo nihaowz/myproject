@@ -1,17 +1,16 @@
 package com.kuang.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kuang.config.JwtTokenUtils;
+import com.kuang.config.jwtConfig.JwtTokenUtils;
 import com.kuang.mapper.AdminMapper;
 import com.kuang.pojo.Admin;
 import com.kuang.service.IAdminService;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
+import javafx.beans.value.ObservableStringValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,7 +53,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Override
     public Response login(AdminLoginVO adminLogin, HttpServletRequest httpRequest) {
+        //可以从请求头里面拿到code
+        String requestCode = (String) httpRequest.getSession().getAttribute("kaptcha");
         UserDetails userDetails = userDetailsService.loadUserByUsername(adminLogin.getUsername());
+        if(StringUtils.isEmpty(requestCode) || !requestCode.equalsIgnoreCase(adminLogin.getCode())){
+            return Response.fail("登录失败，验证码输入错误");
+        }
         //匹配失败 或者details获取为空
         if (!userDetails.getUsername().equals(adminLogin.getUsername()) || !passwordEncoder.matches(adminLogin.getPassword(), userDetails.getPassword()) || userDetails == null) {
             return Response.fail("密码不匹配或者账户不匹配");
@@ -99,9 +103,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         queryWrapper.eq(Admin::getEnabled, true);
 
         Admin admin = adminMapper.selectOne(queryWrapper);
-
-
-        admin.setPassword(null);
 
         if (admin == null) {
             return null;
