@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cacheControl();
         //添加拦截器
         http.addFilterBefore(getJwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        //添加自定义未授权未定义结果饭返回
+        //添加自定义未授权未定义结果返回
         http.exceptionHandling()
                 .accessDeniedHandler(restfulAccessDeniedHandle)
                 .authenticationEntryPoint(restAuthorizationEnrtyPoint);

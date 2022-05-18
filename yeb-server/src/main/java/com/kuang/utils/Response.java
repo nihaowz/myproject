@@ -25,5 +25,8 @@ public class Response<T> {
     public static  <T>Response<T> fail(String message){
         return new Response<T>(500,message,null);
     }
+    public static  <T>Response<T> fail(String message,T object){
+        return new Response<T>(500,message,object);
+    }
 
 }

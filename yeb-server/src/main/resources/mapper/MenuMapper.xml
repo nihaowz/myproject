@@ -40,6 +40,17 @@
         </collection>
     </resultMap>
 
+    <resultMap id="AllMenu" type="com.kuang.pojo.Menu" extends="BaseResultMap">
+        <collection property="children" ofType="com.kuang.pojo.Menu">
+            <result column="id1" property="id"/>
+            <result column="name1" property="name"/>
+            <collection property="children" ofType="com.kuang.pojo.Menu">
+                <result column="id2" property="id"/>
+                <result column="name2" property="name"/>
+            </collection>
+        </collection>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
@@ -79,6 +90,22 @@
             t_role r,
             t_menu_role mr
         WHERE r.id = mr.rid AND mr.mid = m.id;
+    </select>
+    <!--查询出所有的菜单 -->
+    <select id="getAllMenu" resultMap="AllMenu">
+        SELECT
+            m1.id as id,
+            m1.name name,
+            m2.id as id1,
+            m2.name as name1,
+            m3.id as id2,
+            m3.name as name2
+        FROM
+            t_menu m1,
+            t_menu m2,
+            t_menu m3
+        WHERE m1.id = m2.parentId AND m2.id = m3.parentId
+
     </select>
 
 

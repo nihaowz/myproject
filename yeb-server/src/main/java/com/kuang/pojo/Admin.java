@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.ISqlSegment;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -81,12 +82,7 @@ public class Admin implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role ->new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return role.getName();
-            }
-        }).collect(Collectors.toList());
+        return roles.stream().map(role -> (GrantedAuthority) role::getName).collect(Collectors.toList());
     }
 
     @Override

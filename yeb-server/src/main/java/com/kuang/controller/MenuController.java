@@ -51,6 +51,13 @@ public class MenuController {
        return Response.success("查询成功",iMenuService.getMenusFromRole());
     }
 
+    @GetMapping("/getAllMenu")
+    @ApiOperation("查询出所有的菜单")
+    public Response getAllMenu(){
+       return Response.success("查询成功",iMenuService.getAllMenu());
+    }
+
+
 
 
 

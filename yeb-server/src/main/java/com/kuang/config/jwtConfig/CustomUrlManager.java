@@ -29,8 +29,6 @@ public class CustomUrlManager implements AccessDecisionManager {
             //根据url得到的角色，保存至 configAttribute
             String needRole = configAttribute.getAttribute(); //当前需要的角色
 
-            System.out.println(needRole+" ");
-
             //登录就可以访问，不需要如何角色
             if("ROLE_LOGIN".equals(needRole)){
                 if(authentication instanceof AnonymousAuthenticationToken){
@@ -47,8 +45,10 @@ public class CustomUrlManager implements AccessDecisionManager {
                       return;
                   }
             }
-            throw  new AccessDeniedException("权限不足，请联系管理员");
+
         }
+        throw  new AccessDeniedException("权限不足，请联系管理员");
+
     }
 
     @Override

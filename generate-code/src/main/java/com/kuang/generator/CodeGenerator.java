@@ -59,7 +59,7 @@ public class CodeGenerator {
 
             // 数据源配置
             DataSourceConfig dsc = new DataSourceConfig();
-            dsc.setUrl("jdbc:mysql://localhost:3306/work_hours?useUnicode=truet&characterEncoding=utf8&serverTimezone=UTC");
+            dsc.setUrl("jdbc:mysql://localhost:3306/test?useUnicode=truet&characterEncoding=utf8&serverTimezone=UTC");
             // dsc.setSchemaName("public");
             dsc.setDriverName("com.mysql.cj.jdbc.Driver");
             dsc.setUsername("root");
@@ -142,7 +142,7 @@ public class CodeGenerator {
 //            strategy.setSuperEntityColumns("id");
             strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
             strategy.setControllerMappingHyphenStyle(true);
-//            strategy.setTablePrefix("t_");
+            strategy.setTablePrefix("t_");
             strategy.setEntityTableFieldAnnotationEnable(true);
             mpg.setStrategy(strategy);
             mpg.setTemplateEngine(new FreemarkerTemplateEngine());
