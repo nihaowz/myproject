@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -23,8 +24,9 @@ import java.io.Serializable;
  * @since 2022-05-19
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false,of = "name")
 @Accessors(chain = true)
+@RequiredArgsConstructor
 @TableName("t_nation")
 @ApiModel(value="Nation对象", description="")
 public class Nation implements Serializable {
@@ -38,6 +40,7 @@ public class Nation implements Serializable {
     @ApiModelProperty(value = "民族")
     @TableField("name")
     @Excel(name = "民族")
+    @NonNull
     private String name;
 
 

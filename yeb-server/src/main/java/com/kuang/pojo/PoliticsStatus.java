@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -22,8 +24,9 @@ import java.io.Serializable;
  * @since 2022-05-19
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false,of = "name")
 @Accessors(chain = true)
+@RequiredArgsConstructor
 @TableName("t_politics_status")
 @ApiModel(value="PoliticsStatus对象", description="")
 public class PoliticsStatus implements Serializable {
@@ -37,6 +40,7 @@ public class PoliticsStatus implements Serializable {
     @ApiModelProperty(value = "政治面貌")
     @TableField("name")
     @Excel(name = "政治面貌")
+    @NonNull
     private String name;
 
 

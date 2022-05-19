@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -24,7 +26,8 @@ import java.time.LocalDateTime;
  * @since 2022-05-18
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = false,of = "name")
 @Accessors(chain = true)
 @TableName("t_position")
 @ApiModel(value="Position对象", description="")
@@ -39,6 +42,7 @@ public class Position implements Serializable {
     @ApiModelProperty(value = "职位")
     @TableField("name")
     @Excel(name = "职位")
+    @NonNull
     private String name;
 
     @ApiModelProperty(value = "创建时间")

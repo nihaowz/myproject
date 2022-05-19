@@ -1,16 +1,20 @@
 package com.kuang.controller;
 
 
-import com.kuang.pojo.Employee;
-import com.kuang.service.IEmployeeService;
+import cn.afterturn.easypoi.excel.ExcelImportUtil;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
+import com.kuang.pojo.*;
+import com.kuang.service.*;
 import com.kuang.utils.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +34,21 @@ public class EmployeeController {
     
     @Autowired
     IEmployeeService employeeService;
+
+    @Autowired
+    INationService nationService;
+
+    @Autowired
+    IJoblevelService joblevelService;
+
+    @Autowired
+    IDepartmentService departmentService;
+
+    @Autowired
+    IPoliticsStatusService politicsStatusService;
+
+    @Autowired
+    IPositionService positionService;
 
 
     /**
@@ -118,8 +137,6 @@ public class EmployeeController {
     }
 
 
-//    给你一个长度为 n 的整数数组 nums ，返回使所有数组元素相等需要的最少移动数。
-//    在一步操作中，你可以使数组中的一个元素加 1 或者减 1 。
 
 
 
@@ -137,11 +154,54 @@ public class EmployeeController {
      * 将员工进行导入
      * 导入的话你需要知道存入数据库，你需要存入其外键id，如果进行查询的话，每一个都有1万的数据查询比较麻烦.
      */
-//    @ApiOperation(value = "员工导入")
-//    @PostMapping("/importEmployee")
-//    public Response importEmploye(Mu){
-//
-//    }
+    @ApiOperation(value = "员工导入")
+    @PostMapping("/importEmployee")
+    public Response importEmployee(MultipartFile multipartFile) throws Exception {
+        //导入
+        ImportParams importParams = new ImportParams();
+
+        importParams.setTitleRows(1); //有标题头
+        //拿到所有的民族
+        List<Nation> nations = nationService.list();  //拿到所有的民族
+
+        List<Joblevel> joblevels = joblevelService.list(); //拿到所有的职位等级
+
+        List<Department> departments = departmentService.list();//拿到所有的部门
+
+        List<PoliticsStatus> politicsStatuses = politicsStatusService.list(); //拿到所有的政党
+
+        List<Position> positions = positionService.list(); //拿到所有的职位
+
+        List<Employee> employees = ExcelImportUtil.importExcel(multipartFile.getInputStream(), Employee.class, importParams);
+
+        employees.forEach(employee -> {
+            Nation nation = nations.get(nations.indexOf(new Nation(employee.getNation().getName())));
+            employee.setNationId(nation.getId());
+
+            Joblevel joblevel = joblevels.get(joblevels.indexOf(new Joblevel(employee.getJoblevel().getName())));
+            employee.setJobLevelId(joblevel.getId());
+
+            Department department = departments.get(departments.indexOf(new Department(employee.getDepartment().getName())));
+
+            employee.setDepartmentId(department.getId());
+
+            PoliticsStatus politicsStatus = politicsStatuses.get(politicsStatuses.indexOf(new PoliticsStatus(employee.getPoliticsStatus().getName())));
+
+            employee.setPoliticId(politicsStatus.getId());
+
+            Position position = positions.get(positions.indexOf(new Position(employee.getPosition().getName())));
+
+            employee.setPosId(position.getId());
+        });
+
+        boolean b = employeeService.saveBatch(employees);
+        if(b){
+            return Response.success("添加成功");
+        }else{
+            return Response.fail("添加失败");
+        }
+
+    }
 
 
 

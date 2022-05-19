@@ -7,8 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -23,7 +22,9 @@ import java.util.List;
  * @since 2022-05-18
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+//重写，直接通过name进行hash，快速找到其id
+@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = false,of = "name")
 @Accessors(chain = true)
 @TableName("t_department")
 @ApiModel(value="Department对象", description="")
@@ -38,6 +39,7 @@ public class Department implements Serializable {
     @ApiModelProperty(value = "部门名称")
     @TableField("name")
     @Excel(name = "部门")
+    @NonNull
     private String name;
 
     @ApiModelProperty(value = "父id")

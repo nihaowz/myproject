@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -25,8 +27,9 @@ import java.time.LocalDateTime;
  * @since 2022-05-18
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false,of = "name")
 @Accessors(chain = true)
+@RequiredArgsConstructor
 @TableName("t_joblevel")
 @ApiModel(value="Joblevel对象", description="")
 public class Joblevel implements Serializable {
@@ -40,6 +43,7 @@ public class Joblevel implements Serializable {
     @ApiModelProperty(value = "职称名称")
     @TableField("name")
     @Excel(name = "职位级别")
+    @NonNull
     private String name;
 
     @ApiModelProperty(value = "职称等级")
