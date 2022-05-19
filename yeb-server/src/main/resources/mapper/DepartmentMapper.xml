@@ -21,6 +21,15 @@
     <sql id="Base_Column_List">
         id, name, parentId, depPath, enabled, isParent
     </sql>
+
+    <select id="deleteDepartment" statementType="CALLABLE">
+        call deleteDep(#{id,mode=IN,jdbcType=INTEGER},#{result,mode=OUT,jdbcType=INTEGER});
+    </select>
+    <!--  运用存储过程进行操作  -->
+    <!--  调用存储过程  -->
+    <select id="addDepartment" statementType="CALLABLE">
+        call addDep1(#{name,mode=IN,jdbcType=VARCHAR},#{parentId,mode=IN,jdbcType=INTEGER},#{result,mode=OUT,jdbcType=INTEGER},#{result2,mode=OUT,jdbcType=INTEGER})
+    </select>
     <select id="getAllDepartment" resultMap="AllDepartment">
         select * from t_department where parentId = #{id}
     </select>

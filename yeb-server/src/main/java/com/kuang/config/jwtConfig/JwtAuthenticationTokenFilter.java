@@ -39,6 +39,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // key ： value
             // authentication ： beare jwt中的token
             String username = jwtTokenUtils.getUsernameFromToken(token);
+
             //用户可以查询出来，但是security中并没有相关的信息
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 //
@@ -49,6 +50,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
+
             }
         }
         filterChain.doFilter(request,response);

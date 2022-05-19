@@ -1,6 +1,5 @@
 package com.kuang.utils;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

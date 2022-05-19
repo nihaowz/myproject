@@ -34,7 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin")
-@Api(tags = "admin-controller")
+@Api(tags = "Admin-Controller")
 public class AdminController {
 
     @Autowired

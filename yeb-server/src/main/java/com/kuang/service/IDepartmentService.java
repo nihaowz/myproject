@@ -1,7 +1,10 @@
 package com.kuang.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kuang.dto.DepartmentDto;
 import com.kuang.pojo.Department;
+import com.kuang.utils.Response;
+import com.kuang.vo.DepartmentVO;
 
 import java.util.List;
 
@@ -16,4 +19,8 @@ import java.util.List;
 public interface IDepartmentService extends IService<Department> {
 
     List<Department> getAllDepartment();
+
+    Response addDepartment(DepartmentVO departmentVO);
+
+    Response deleteDepartment(DepartmentDto departmentDto);
 }

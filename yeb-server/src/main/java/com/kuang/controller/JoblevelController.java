@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/joblevel")
-@Api("JoblevelController")
+@Api(tags = "Joblevel-Controller")
 public class JoblevelController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class JoblevelController {
     }
 
     @ApiOperation(value = "查询所有的职位级别")
-    @PostMapping("/getAllJobLevel")
+    @GetMapping("/getAllJobLevel")
     public Response getAllJobLevel(){
         List<Joblevel> joblevels = joblevelService.list();
         return Response.success("查询成功", joblevels);

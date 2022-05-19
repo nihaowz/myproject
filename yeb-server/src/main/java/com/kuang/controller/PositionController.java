@@ -24,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/position")
-@Api("PositionController")
+@Api(tags = "Position-Controller")
 public class PositionController {
 
     @Autowired
@@ -68,7 +68,7 @@ public class PositionController {
     }
 
     @ApiOperation(value = "查询所有的职位")
-    @DeleteMapping("/queryPosition")
+    @GetMapping("/queryPosition")
     public Response queryPosition(){
         List<Position> positions = positionService.list();
         return Response.success("查询成功",positions);
