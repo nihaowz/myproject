@@ -11,19 +11,24 @@ import com.kuang.service.IAdminService;
 import com.kuang.service.IRoleService;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
+import com.luhuiguo.fastdfs.service.FastFileStorageClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -38,23 +43,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @Api(tags = "Admin-Controller")
+@Slf4j
 public class AdminController {
 
 
     @Autowired
-    IAdminRoleService adminRoleService;
+    private IAdminRoleService adminRoleService;
 
     @Autowired
-    IAdminService iAdminService;
+    private IAdminService iAdminService;
 
     @Autowired
-    IRoleService roleService;
+    private IRoleService roleService;
 
     @Autowired
-    DefaultKaptcha defaultKaptcha;
+    private DefaultKaptcha defaultKaptcha;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+
+
+
 
     @ApiOperation("注册接口")
     @PostMapping("/register")
@@ -135,6 +145,15 @@ public class AdminController {
     @GetMapping("/getRoles")
     public List<Role> getRoles(Integer adminId){
         return roleService.getRoles(adminId);
+    }
+
+
+
+    @ApiOperation(value = "更新用户头像")
+    @PostMapping("/admin/userFace")
+    public Response updateAdminFace(MultipartFile multipartFile, Integer id, Authentication authentication) throws IOException {
+        log.info(multipartFile.getName());
+        return iAdminService.updateAdminFace(multipartFile.getBytes(),multipartFile.getOriginalFilename(),id,authentication);
     }
 
 

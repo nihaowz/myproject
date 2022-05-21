@@ -29,7 +29,6 @@ spring:
     publisher-confirm-type: correlated
 #    消息失败回调
     publisher-returns: true
-
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
   type-aliases-package: com.kuang.pojo
@@ -42,3 +41,21 @@ jwt:
   sercret: sercret
   expiration: 3600
   tokenHead: Bearer
+#fastdfs的配置
+#fastdfs:
+#    tarcker-list: 42.192.56.50:22122
+##      可以配置多个进行集群
+##      读取数据超时
+#    so-timeout: 3000
+##    连接超时
+#    connect-timeout: 600
+#    thumb-image:
+#      width: 150
+#      height: 150
+fdfs:
+  tracker-list: 42.192.56.50:22122
+  so-timeout: 1500
+  connect-timeout: 600
+  thumb-image:
+    width: 150
+    height: 150

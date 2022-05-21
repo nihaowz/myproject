@@ -15,12 +15,15 @@ import com.kuang.service.IAdminService;
 import com.kuang.utils.MailConstants;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
+import com.luhuiguo.fastdfs.domain.StorePath;
+import com.luhuiguo.fastdfs.service.FastFileStorageClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -70,6 +73,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+
+    @Autowired
+    private FastFileStorageClient fastFileStorageClient;
 
 
     @Autowired
@@ -178,6 +184,26 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         map.put("tokenHead", tokenHead);
         //返回给前端
         return Response.success("注册成功", map);
+    }
+
+    @Override
+    public Response updateAdminFace(byte[] bytes, String name, Integer id, Authentication authentication) {
+        //得到他的后缀
+        String suffix = name.substring(name.lastIndexOf(".") + 1);
+        log.info("查看他的后缀======>{}"+suffix);
+        StorePath storePath = fastFileStorageClient.uploadFile(bytes, suffix);
+        //得到他的存储路径
+        log.info("id为{}，他的图片的存储路径是{}",id,storePath.getFullPath());
+        String path = "http://42.192.56.50:8080/"+storePath.getFullPath();
+        Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().eq("id", id));
+        admin.setUserFace(path);
+        int rowCount = adminMapper.updateById(admin);
+        if(rowCount== 1){
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(admin, null, authentication.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            return Response.success("更新成功",path);
+        }
+        return Response.fail("更新失败");
     }
 
 

@@ -6,6 +6,7 @@ import com.kuang.pojo.Role;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,4 +34,6 @@ public interface IAdminService extends IService<Admin> {
      * @return
      */
     Response register(Admin admin, HttpServletResponse httpServletResponse);
+
+    Response updateAdminFace(byte[] bytes, String name, Integer id, Authentication authentication);
 }
