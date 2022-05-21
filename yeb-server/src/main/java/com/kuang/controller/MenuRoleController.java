@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class MenuRoleController {
 
     @Autowired
-    IMenuRoleService menuRoleService;
+    private IMenuRoleService menuRoleService;
     /**
      * 更改某一个角色对应的菜单或者添加某一个角色对应的菜单
      */

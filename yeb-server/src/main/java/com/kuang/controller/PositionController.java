@@ -28,7 +28,7 @@ import java.util.List;
 public class PositionController {
 
     @Autowired
-    IPositionService positionService;
+    private IPositionService positionService;
 
     @ApiOperation(value = "添加职位")
     @PostMapping("/addPosition")

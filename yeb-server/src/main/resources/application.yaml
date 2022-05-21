@@ -19,6 +19,17 @@ spring:
 #        max-idle: 200
 #        min-idle: 5
     password: codesheep
+  rabbitmq:
+    username: admin1
+    password: admin1
+    host: 42.192.56.50
+    port: 5672
+    virtual-host: /
+#    消息确认回调
+    publisher-confirm-type: correlated
+#    消息失败回调
+    publisher-returns: true
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
   type-aliases-package: com.kuang.pojo

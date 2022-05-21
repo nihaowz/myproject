@@ -30,7 +30,7 @@ import java.util.List;
 public class MenuController {
 
     @Autowired
-    IMenuService iMenuService;
+    private IMenuService iMenuService;
     /**
      * 根据id查询所有的菜单
      */

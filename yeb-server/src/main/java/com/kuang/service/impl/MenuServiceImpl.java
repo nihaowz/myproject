@@ -29,10 +29,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
 
     @Autowired
-    MenuMapper menuMapper;
+    private MenuMapper menuMapper;
 
     @Autowired
-    RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
 
 
     /**

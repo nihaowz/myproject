@@ -28,7 +28,7 @@ import java.util.List;
 public class RoleController {
 
     @Autowired
-    IRoleService roleService;
+    private IRoleService roleService;
 
     @PostMapping("/addRole")
     @ApiOperation("添加角色")

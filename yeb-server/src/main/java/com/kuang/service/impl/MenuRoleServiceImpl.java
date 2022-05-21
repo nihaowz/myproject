@@ -23,7 +23,7 @@ import java.util.List;
 public class MenuRoleServiceImpl extends ServiceImpl<MenuRoleMapper, MenuRole> implements IMenuRoleService {
 
     @Autowired
-    MenuRoleMapper menuRoleMapper;
+    private MenuRoleMapper menuRoleMapper;
 
     @Override
     public List<MenuRole> selectDeleteByRoleId(Integer roleId) {

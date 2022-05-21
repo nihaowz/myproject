@@ -30,7 +30,7 @@ import java.util.List;
 public class NationController {
 
     @Autowired
-    INationService nationService;
+    private INationService nationService;
 
     @ApiOperation(value = "查询所有的名族")
     @GetMapping("/getAllNation")

@@ -33,22 +33,22 @@ import java.util.List;
 public class EmployeeController {
     
     @Autowired
-    IEmployeeService employeeService;
+    private IEmployeeService employeeService;
 
     @Autowired
-    INationService nationService;
+    private INationService nationService;
 
     @Autowired
-    IJoblevelService joblevelService;
+    private IJoblevelService joblevelService;
 
     @Autowired
-    IDepartmentService departmentService;
+    private IDepartmentService departmentService;
 
     @Autowired
-    IPoliticsStatusService politicsStatusService;
+    private IPoliticsStatusService politicsStatusService;
 
     @Autowired
-    IPositionService positionService;
+    private IPositionService positionService;
 
 
     /**

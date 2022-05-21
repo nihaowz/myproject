@@ -43,4 +43,6 @@ public interface IEmployeeService extends IService<Employee> {
     void exportAllEmployee(HttpServletResponse httpServletResponse);
 
     List<Employee> getAllEmployee();
+
+    Response getAllEmployeeBySalary(Integer currentPage, Integer size);
 }

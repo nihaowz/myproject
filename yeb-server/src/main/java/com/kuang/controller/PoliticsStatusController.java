@@ -29,7 +29,7 @@ import java.util.List;
 public class PoliticsStatusController {
 
     @Autowired
-    IPositionService positionService;
+    private IPositionService positionService;
 
     @ApiOperation(value = "查询所有的政党")
     @GetMapping("/getAllPoliticsStatus")

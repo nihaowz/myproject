@@ -1,29 +1,40 @@
 package com.kuang.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kuang.config.jwtConfig.JwtTokenUtils;
 import com.kuang.mapper.AdminMapper;
+import com.kuang.mapper.AdminRoleMapper;
+import com.kuang.mapper.MailLogMapper;
 import com.kuang.pojo.Admin;
+import com.kuang.pojo.AdminRole;
+import com.kuang.pojo.MailLog;
 import com.kuang.pojo.Role;
 import com.kuang.service.IAdminService;
+import com.kuang.utils.MailConstants;
 import com.kuang.utils.Response;
 import com.kuang.vo.AdminLoginVO;
-import javafx.beans.value.ObservableStringValue;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * <p>
@@ -34,24 +45,35 @@ import java.util.Map;
  * @since 2022-05-16
  */
 @Service
+@Slf4j
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
 
 
     //根据userDeatilsService找到userDetails获取到相关的用户信息
     @Autowired
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
 
     @Autowired
-    AdminMapper adminMapper;
+    private AdminMapper adminMapper;
+
+    @Autowired
+    private AdminRoleMapper adminRoleMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+
+
+    @Autowired
+    private MailLogMapper mailLogMapper;
 
     @Override
     public Response login(AdminLoginVO adminLogin, HttpServletRequest httpRequest) {
@@ -74,7 +96,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         //第一个填写userDetils 第二个是填写密码
         //第三个是填写你所有的授权
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
 
@@ -91,18 +113,20 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         return Response.success("登录成功", map);
     }
 
+
+
     //根据用户名查找到admin对象
     @Override
     public Admin getAdminByName(String username) {
         //运用lambda表达式的形式
         //查询出来的映射对象
-        LambdaQueryWrapper<Admin> queryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
 
         if (!StringUtils.isEmpty(username)) {
-            queryWrapper.eq(Admin::getUsername, username);
+            queryWrapper.eq("username", username);
         }
 
-        queryWrapper.eq(Admin::getEnabled, true);
+        queryWrapper.eq("enabled", true);
 
         Admin admin = adminMapper.selectOne(queryWrapper);
 
@@ -111,6 +135,49 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         } else {
             return admin;
         }
+    }
+
+    /**
+     * 根据返回的注册信息写入数据库，返回token
+     * @param admin
+     * @param httpServletResponse
+     * @return
+     */
+    @Override
+    public Response register(Admin admin, HttpServletResponse httpServletResponse) {
+        String password = admin.getPassword();
+        String enPassword = passwordEncoder.encode(password);
+        admin.setPassword(enPassword);
+        int rowCountAdmin = adminMapper.insert(admin);
+        AdminRole adminRole = new AdminRole(admin.getId(),8);
+        int rowCountAdminRole = adminRoleMapper.insert(adminRole);
+        List<Role> roles = adminMapper.getRoles(admin.getId());
+        admin.setRoles(roles);
+        //注册成功则发送邮件
+        log.info("注册成功：{}",admin.getUsername());
+        if(rowCountAdminRole==1 && rowCountAdmin == 1){
+//            //使用默认的交换机，通过路由key跳转到相应的queue上，然后对其消息进行消费。
+//            rabbitTemplate.convertAndSend("mail",admin);
+            //生成uuid
+            String uuid = UUID.randomUUID().toString();
+
+//            uuid, admin.getId(), MailConstants.DELIVERY_PREPARE, MailConstants.ROUTING_KEY, MailConstants.EXCHANGE, MailConstants.MAX_RETRY_COUNT, LocalDateTime.now().plusMinutes(MailConstants.RETRY_TIME
+            MailLog mailLog = new MailLog(uuid,admin.getId(),MailConstants.DELIVERY_PREPARE,MailConstants.ROUTING_KEY,MailConstants.EXCHANGE,0
+                                         ,LocalDateTime.now().plusMinutes(MailConstants.RETRY_TIME),LocalDateTime.now(),null);
+
+            mailLogMapper.insert(mailLog);
+
+            rabbitTemplate.convertAndSend(MailConstants.EXCHANGE,MailConstants.ROUTING_KEY,admin,new CorrelationData(uuid));
+
+        }
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(admin, null, admin.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        String token = jwtTokenUtils.generateToken(admin);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("token", token);
+        map.put("tokenHead", tokenHead);
+        //返回给前端
+        return Response.success("注册成功", map);
     }
 
 

@@ -4,7 +4,9 @@ package com.kuang.controller;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.kuang.config.kaptchaConfig.KaptchaConfig;
 import com.kuang.pojo.Admin;
+import com.kuang.pojo.AdminRole;
 import com.kuang.pojo.Role;
+import com.kuang.service.IAdminRoleService;
 import com.kuang.service.IAdminService;
 import com.kuang.service.IRoleService;
 import com.kuang.utils.Response;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -37,6 +40,10 @@ import java.util.List;
 @Api(tags = "Admin-Controller")
 public class AdminController {
 
+
+    @Autowired
+    IAdminRoleService adminRoleService;
+
     @Autowired
     IAdminService iAdminService;
 
@@ -45,6 +52,17 @@ public class AdminController {
 
     @Autowired
     DefaultKaptcha defaultKaptcha;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @ApiOperation("注册接口")
+    @PostMapping("/register")
+    public Response register(@RequestBody Admin admin,HttpServletResponse httpServletResponse){
+       return iAdminService.register(admin,httpServletResponse);
+
+    }
+
 
     @ApiOperation(value = "登录接口,返回jwt令牌")
     @PostMapping("/login")

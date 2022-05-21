@@ -1,0 +1,46 @@
+server:
+  port: 8083
+spring:
+  mail:
+    host: smtp.163.com
+    protocol: smtp
+    default-encoding: UTF-8
+    password: PUDRWABQBSUNAHMP
+    username: Wangzhi20010427@163.com
+    port: 25
+  rabbitmq:
+    username: admin1
+    password: admin1
+    host: 42.192.56.50
+    port: 5672
+    virtual-host: /
+      #    手动确认
+    listener:
+      simple:
+        #        开启手动确认
+        acknowledge-mode: manual
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver # 8.0 以后是需要加时区的
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+  redis:
+    host: 42.192.56.50
+    port: 6379
+    connect-timeout: 10000ms
+    #    lettuce:
+    #      pool:
+    #        max-active: 1024
+    #        max-wait: 10000ms
+    #        max-idle: 200
+    #        min-idle: 5
+    password: codesheep
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  type-aliases-package: com.kuang.pojo
+jwt:
+  tokenHeader: Authorization
+  sercret: sercret
+  expiration: 3600
+  tokenHead: Bearer

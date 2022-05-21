@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NegativeOrZero;
 import java.io.Serializable;
 
 /**
@@ -24,6 +24,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_admin_role")
+@RequiredArgsConstructor
 @ApiModel(value="AdminRole对象", description="")
 public class AdminRole implements Serializable {
 
@@ -35,11 +36,11 @@ public class AdminRole implements Serializable {
 
     @ApiModelProperty(value = "用户id")
     @TableField("adminId")
+    @NonNull
     private Integer adminId;
 
     @ApiModelProperty(value = "权限id")
     @TableField("rid")
+    @NonNull
     private Integer rid;
-
-
 }

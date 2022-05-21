@@ -9,6 +9,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -25,4 +26,11 @@ public interface IAdminService extends IService<Admin> {
 
     Admin getAdminByName(String username);
 
+    /**
+     * 根据返回的注册信息写入数据库，返回token
+     * @param admin
+     * @param httpServletResponse
+     * @return
+     */
+    Response register(Admin admin, HttpServletResponse httpServletResponse);
 }

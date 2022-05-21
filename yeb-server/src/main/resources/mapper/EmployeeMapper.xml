@@ -59,6 +59,30 @@
         </association>
     </resultMap>
 
+    <resultMap id="EmployeeBySalary" type="com.kuang.pojo.Employee" extends="BaseResultMap">
+        <association property="department" javaType="com.kuang.pojo.Department">
+            <result column="dname" property="name"/>
+        </association>
+        <association property="salary" javaType="com.kuang.pojo.Salary">
+            <id column="sid" property="id"/>
+            <result column="saccumulationFundBase" property="accumulationFundBase"/>
+            <result column="sbasicSalary" property="accumulationFundBase"/>
+            <result column="sbonus" property="accumulationFundBase"/>
+            <result column="strafficSalary" property="trafficSalary"/>
+            <result column="slunchSalary" property="lunchSalary"/>
+            <result column="spensionBase" property="pensionBase"/>
+            <result column="sallSalary" property="allSalary"/>
+            <result column="smedicalBase" property="medicalBase"/>
+            <result column="screateDate" property="createDate"/>
+            <result column="saccumulationFundPer" property="accumulationFundPer"/>
+            <result column="smedicalPer" property="medicalPer"/>
+            <result column="spensionPer" property="pensionPer"/>
+            <result column="sname" property="name"/>
+        </association>
+
+
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, gender, birthday, idCard, wedlock, nationId, nativePlace, politicId, email, phone, address, departmentId, jobLevelId, posId, engageForm, tiptopDegree, specialty, school, beginDate, workState, workID, contractTerm, conversionTime, notWorkDate, beginContract, endContract, workAge, salaryId
@@ -156,6 +180,35 @@
           AND e.nationId = n.id
           AND e.politicId = ps.id
         ORDER BY e.id
+    </select>
+    <select id="getAllEmployeeBySalary" resultMap="EmployeeBySalary">
+        select
+            e.*,
+            d.name as dname,
+            s.accumulationFundBase as saccumulationFundBase,
+            s.id as sid,
+
+            s.basicSalary as sbasicSalary ,
+
+            s.bonus as sbonus,
+
+            s.trafficSalary  as strafficSalary,
+            s.lunchSalary  as slunchSalary,
+
+            s.pensionBase as spensionBase,
+            s.allSalary as sallSalary,
+            s.medicalBase as smedicalBase,
+            s.createDate as screateDate,
+
+            s.accumulationFundPer as saccumulationFundPer,
+            s.medicalPer as smedicalPer,
+            s.pensionPer as spensionPer,
+            s.name as sname
+        from
+            t_department d,
+            t_salary s,
+            t_employee e
+        where d.id = e.departmentId and e.salaryId = s.id;
     </select>
 
 </mapper>

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class DepartmentController {
 
     @Autowired
-    IDepartmentService departmentService;
+    private IDepartmentService departmentService;
     /**
      * 查询所有的部门
      */

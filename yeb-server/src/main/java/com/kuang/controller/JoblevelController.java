@@ -27,7 +27,7 @@ import java.util.List;
 public class JoblevelController {
 
     @Autowired
-    IJoblevelService joblevelService;
+    private IJoblevelService joblevelService;
 
     @ApiOperation(value = "添加职位级别")
     @PostMapping("/addJobLevel")

@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
     @Autowired
-    RoleMapper roleMapper;
+    private RoleMapper roleMapper;
     @Override
     public List<Role> getRoles(Integer adminId) {
 //        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

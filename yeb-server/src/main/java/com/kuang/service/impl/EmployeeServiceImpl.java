@@ -40,7 +40,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
 
     @Autowired
-    EmployeeMapper employeeMapper;
+    private EmployeeMapper employeeMapper;
 
     /**
      * 分页查询
@@ -139,6 +139,14 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     @Override
     public List<Employee> getAllEmployee() {
        return employeeMapper.getAllEmployee();
+    }
+
+    @Override
+    public Response getAllEmployeeBySalary(Integer currentPage, Integer size) {
+        Page<Employee> page = new Page<>(currentPage, size);
+        IPage<Employee> allEmployeeBySalary = employeeMapper.getAllEmployeeBySalary(page);
+        PageUtils pageUtils = new PageUtils((int) allEmployeeBySalary.getTotal(),allEmployeeBySalary.getRecords());
+        return Response.success("查询成功",pageUtils);
     }
 
 
